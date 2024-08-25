@@ -11,6 +11,7 @@ import io.dhruv.weatherwise.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 
@@ -54,6 +55,12 @@ class WeatherRepository(val context: Context) {
         Log.e("TAG", "data from livedata: ${_data.value}")
 
 
+    }
+
+
+    suspend fun getCachedWeather() :ResponseModal{
+        Log.e("TAG", "getWeather2: ")
+        return context.dataStore.data.first()
     }
 
     private suspend fun storeWeatherLocally(response: ResponseModal) {

@@ -19,6 +19,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
@@ -43,6 +44,9 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -57,6 +61,7 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
     val density = LocalDensity.current
     var textWidth by remember { mutableStateOf(0.dp) }
     val post by viewModel.posts.observeAsState()
+
 
     Box(
         modifier = modifier
