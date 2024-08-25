@@ -1,4 +1,4 @@
-package io.dhruv.weatherwise
+package io.dhruv.weatherwise.data.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

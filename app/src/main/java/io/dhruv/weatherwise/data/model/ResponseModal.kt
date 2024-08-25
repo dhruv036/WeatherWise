@@ -1,4 +1,4 @@
-package io.dhruv.weatherwise
+package io.dhruv.weatherwise.data.model
 
 import kotlinx.serialization.Serializable
 

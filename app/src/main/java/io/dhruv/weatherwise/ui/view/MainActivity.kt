@@ -1,4 +1,4 @@
-package io.dhruv.weatherwise
+package io.dhruv.weatherwise.ui.view
 
 import android.content.IntentSender
 import androidx.compose.ui.graphics.Color
@@ -17,18 +17,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import io.dhruv.weatherwise.ui.theme.WeatherWiseTheme
-import kotlinx.coroutines.launch
+import io.dhruv.weatherwise.ui.viewModel.WeatherViewModel
 
 class MainActivity : ComponentActivity() {
     val viewModel by viewModels<WeatherViewModel>()
@@ -93,26 +89,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    fun askLocationPermission(){
-//        val locationRequest = LocationRequest.create().apply {
-//            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-//        }
-
-        // Step 2: Build LocationSettingsRequest
-//        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-//        val settingsClient = LocationServices.getSettingsClient(AppContext.context!!)
-//        val task = settingsClient.checkLocationSettings(builder.build())
-
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                // User enabled location
-            } else {
-                Toast.makeText(this, "Need Gps", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
 }
 
 

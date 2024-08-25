@@ -1,6 +1,7 @@
-package io.dhruv.weatherwise
+package io.dhruv.weatherwise.utils
 
 import androidx.datastore.core.Serializer
+import io.dhruv.weatherwise.data.model.ResponseModal
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream

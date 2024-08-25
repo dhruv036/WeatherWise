@@ -1,19 +1,18 @@
-package io.dhruv.weatherwise
+package io.dhruv.weatherwise.utils.location
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import io.dhruv.weatherwise.utils.ConnectionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class NetworkConnectivityObserver(
     context: Context
 ){
@@ -40,7 +39,6 @@ class NetworkConnectivityObserver(
 
         connectivityManager.registerNetworkCallback(networkRequest, callback)
 
-        // Emit the initial state
         val isConnected = connectivityManager.activeNetwork?.let {
             connectivityManager.getNetworkCapabilities(it)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         } == true

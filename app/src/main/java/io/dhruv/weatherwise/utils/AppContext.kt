@@ -1,4 +1,4 @@
-package io.dhruv.weatherwise
+package io.dhruv.weatherwise.utils
 
 import android.app.Application
 import android.content.Context

@@ -1,16 +1,17 @@
-//import com.google.protobuf.gradle.*
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
-//    id ("org.jetbrains.kotlin.plugin.serialization")
-//    id("com.google.protobuf") version "0.9.4"
 }
 
 android {
     namespace = "io.dhruv.weatherwise"
     compileSdk = 34
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "io.dhruv.weatherwise"
@@ -22,6 +23,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "MY_API_KEY", "\"a9d7877ecf28b142eab78b39d9e14c03\"")
+
     }
 
     buildTypes {
@@ -73,11 +77,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.runtime.livedata)
 
-    // Proto datastore
-//    implementation("androidx.datastore:datastore:1.0.0")
-//    implementation("com.google.protobuf:protobuf-javalite:3.21.11")
-//    implementation("com.google.protobuf:protobuf-kotlin-lite:3.21.11")
-
+    // Datastore
     implementation( "androidx.datastore:datastore:1.0.0")
     implementation( "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
@@ -92,22 +92,3 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
-
-//protobuf {
-//    protoc {
-//        artifact = "com.google.protobuf:protoc:3.10.0"
-//    }
-//
-//    // Generates the java Protobuf-lite code for the Protobufs in this project. See
-//    // https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
-//    // for more information.
-//    generateProtoTasks {
-//        all().each { task ->
-//            task.builtins {
-//                java {
-//                    option 'lite'
-//                }
-//            }
-//        }
-//    }
-//}

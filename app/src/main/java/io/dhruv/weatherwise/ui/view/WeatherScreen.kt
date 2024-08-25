@@ -1,4 +1,4 @@
-package io.dhruv.weatherwise
+package io.dhruv.weatherwise.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,12 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
@@ -32,7 +30,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -44,18 +41,14 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
+import io.dhruv.weatherwise.R
+import io.dhruv.weatherwise.data.model.ResponseModal
+import io.dhruv.weatherwise.ui.viewModel.WeatherViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 
 
-//@Preview(
-//    showBackground = true,
-//    device = "spec:width=370dp,height=830dp,isRound=false,chinSize=0dp,orientation=portrait",
-//    backgroundColor = 0xFF111111
-//)
+
 @Composable
 fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
     val density = LocalDensity.current
@@ -122,10 +115,11 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
             Spacer(modifier = Modifier.height(4.dp))
             Row {
                 Text(
-                    text = post?.main?.temp?.let {
-                        val time = it.minus(273.15)
-                        time.toInt()
-                    }.toString().plus("°C") ?: " ",
+                    text = post?.main?.temp?.let { temp ->
+                        val celsius = temp - 273.15
+                        val celsiusInt = celsius.toInt()
+                        "$celsiusInt°C"
+                    } ?: " ",
                     color = Color.White,
                     fontSize = 80.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -133,7 +127,7 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
 
                 )
                 AsyncImage(
-                    model = "https://openweathermap.org/img/wn/10n@2x.png",
+                    model = "https://openweathermap.org/img/wn/${post?.weather?.takeIf { it.isNotEmpty() }?.get(0)?.icon?:"10n"}@2x.png",
                     contentDescription = null,
                     modifier = Modifier.size(100.dp),
                 )
@@ -167,10 +161,11 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = post?.main?.temp_max.let {
-                            val time = it?.minus(273.15) ?: 273.15
-                            time.toInt()
-                        }?.toString().plus("°C") ?: " ",
+                        text = post?.main?.temp_max?.let {
+                            val celsius = it.minus(273)
+                            val celsiusInt = celsius.toInt()
+                            "$celsiusInt°C"
+                        } ?: " ",
                         color = Color.White,
                         fontFamily = FontFamily(Font(R.font.montserrat_medium))
                     )
@@ -196,10 +191,11 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = post?.main?.temp_min.let {
-                            val time = it?.minus(273) ?: 273
-                            time.toInt()
-                        }?.toString().plus("°C") ?: " ",
+                        text = post?.main?.temp_min?.let {
+                            val celsius = it.minus(273.15)
+                            val celsiusInt = celsius.toInt()
+                            "$celsiusInt°C"
+                        } ?: " ",
                         color = Color.White,
                         fontFamily = FontFamily(Font(R.font.montserrat_medium))
                     )
@@ -326,7 +322,9 @@ fun rightInfo(post: ResponseModal?) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = post?.wind?.speed?.toString().plus("m/s") ?: " ",
+                text = post?.wind?.speed?.let { speed ->
+                    "${speed.toString()} m/s" // Convert speed to string and append the unit
+                } ?: " ",
                 color = Color.White,
                 fontFamily = FontFamily(Font(R.font.montserrat_medium))
             )
@@ -353,7 +351,9 @@ fun rightInfo(post: ResponseModal?) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = post?.main?.humidity?.toString().plus("%") ?: " ",
+                text = post?.main?.humidity?.let { it ->
+                    "${it.toString()} %" // Convert speed to string and append the unit
+                } ?: " ",
                 color = Color.White,
                 fontFamily = FontFamily(Font(R.font.montserrat_medium))
             )
