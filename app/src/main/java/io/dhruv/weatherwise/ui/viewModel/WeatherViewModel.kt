@@ -23,6 +23,10 @@ class WeatherViewModel : ViewModel() {
 
     val _isGpsAvailable : MutableLiveData<Boolean> = MutableLiveData()
     val isGpsAvailable: LiveData<Boolean> get() = _isGpsAvailable
+
+    val _isDataReady : MutableLiveData<Boolean> = MutableLiveData()
+    val isDataReady: LiveData<Boolean> get() = _isDataReady
+
     init {
         locationTracker = DefaultLocationTracker(
             LocationServices.getFusedLocationProviderClient(AppContext.context!!),
@@ -36,20 +40,23 @@ class WeatherViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val connectivityObserver = NetworkConnectivityObserver(AppContext.context!!)
             val isNetworkAvailable = connectivityObserver.observeConnectivityAsFlow().first() == ConnectionState.Available
-
+            _isDataReady.postValue(false)
             if (isNetworkAvailable.not()){
                 _posts.postValue(repo.getCachedWeather())
+                _isDataReady.postValue(true)
             }else{
                 locationTracker.getCurrentLocation()?.let { location ->
                     launch {
                         repo.data.collect {
                             _posts.postValue(it)
+                            _isDataReady.postValue(true)
                         }
                     }
                     repo.getWeather(location.latitude, location.longitude) //gps is on so get weather
                 } ?: run {
                     // when gps is off: take permission
-                _isGpsAvailable.postValue(false)
+                    _isDataReady.postValue(true)
+                    _isGpsAvailable.postValue(false)
                 }
             }
         }

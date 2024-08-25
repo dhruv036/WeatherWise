@@ -1,5 +1,6 @@
 package io.dhruv.weatherwise.ui.view
 
+import android.widget.ProgressBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,8 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,9 +32,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -54,7 +59,7 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
     val density = LocalDensity.current
     var textWidth by remember { mutableStateOf(0.dp) }
     val post by viewModel.posts.observeAsState()
-
+    val isLoading by viewModel.isDataReady.observeAsState()
 
     Box(
         modifier = modifier
@@ -67,8 +72,19 @@ fun WeatherScreen(modifier: Modifier = Modifier, viewModel: WeatherViewModel) {
                     )
                 )
             )
-            .padding(vertical = 16.dp, horizontal = 8.dp)
+            .padding(vertical = 16.dp, horizontal = 8.dp),
+        contentAlignment = Alignment.Center
     ) {
+
+        if(isLoading == false){
+            CircularProgressIndicator(
+                trackColor = Color(0xFFE0E0E0),
+                strokeWidth = 8.dp,
+                color = Color(0xFF616161),
+                strokeCap = StrokeCap.Round,
+                modifier = Modifier.size(48.dp)
+            )
+        }
 
         Column {
             Text(
